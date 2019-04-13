@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Desconectar"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnJugar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnJugar_Click"
+        android:text="Jugar" />
+
+    <Button
+        android:id="@+id/btnPartidasGuardadas"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnPartidasGuardadas_Click"
+        android:text="Partidas guardadas" />
+
+</LinearLayout>
