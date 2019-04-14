@@ -21,6 +21,9 @@
         <activity
             android:name=".Juego"
             android:label="@string/app_name"></activity>
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
     </application>
 
 </manifest>

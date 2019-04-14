@@ -6,12 +6,12 @@ Google Play Games: Parejas
 (X) Ejercicio: Conectar con Google Play Games una aplicación Android.
 (X) Ejercicio: Activar guardar partidas en Google Play Developer Console.
 (X) Ejercicio: Mostrar la interfaz para la selección de partidas guardadas.
-(_) Ejercicio: Guardar una partida en Google Play Games.
-(_) Ejercicio: Cargar una partida guardada en Google Play Games.
-(_) Ejercicio: Crear una partida rápida.
-(_) Ejercicio: Gestionar los mensajes en una partida a tiempo real.
-(_) Ejercicio: Invitar a otros jugadores.
-(_) Ejercicio: Crear una partida por turnos.
+(X) Ejercicio: Guardar una partida en Google Play Games.
+(X) Ejercicio: Cargar una partida guardada en Google Play Games.
+(X) Ejercicio: Crear una partida rápida.
+(X) Ejercicio: Gestionar los mensajes en una partida a tiempo real.
+(X) Ejercicio: Invitar a otros jugadores.
+(X) Ejercicio: Crear una partida por turnos.
 (_) Ejercicio: Crear un marcador en Google Play Developer Console.
 (_) Ejercicio: Introducir puntuaciones en un marcador.
 (_) Ejercicio: Mostrar un marcador.
