@@ -25,5 +25,5 @@ Google Play Games: Parejas
 (X) Ejercicio: Recuperar estadísticas de un jugador.
 (X) Ejercicio: Grabar un video en un juego.
 Extras:
-(_) Práctica: Almacenar puntuación y turno.
-(_) Práctica: Marcador de partidas guardadas:
+(X) Práctica: Almacenar puntuación y turno.
+(X) Práctica: Marcador de partidas guardadas:

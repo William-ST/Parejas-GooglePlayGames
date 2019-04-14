@@ -135,16 +135,13 @@ public class Juego extends Activity {
                 }
                 if ((Partida.puntosJ1 + Partida.puntosJ2) == (Partida.FILAS * Partida.COLUMNAS)) {
                     //FIN JUEGO
-                    /*
-                    if (Partida.tipoPartida == "REAL") {
+                    if (Partida.tipoPartida.equals("LOCAL")) {
                         int puntos;
                         if (jugadorLocal == 1) {
                             puntos = Partida.puntosJ1;
-                        } else {
-                            puntos = Partida.puntosJ2;
+                            mLeaderboardsClient.submitScore(getString(R.string.marcador_local_id), puntos);
                         }
                     }
-                    */
                     if (Partida.tipoPartida.equals("REAL")) {
                         int puntos;
                         if (jugadorLocal == 1) {
@@ -236,7 +233,7 @@ public class Juego extends Activity {
         @Override
         public void onClick(View v) {
             synchronized (lock) {
-                if (Partida.tipoPartida == "REAL") {
+                if (Partida.tipoPartida.equals("REAL")) {
                     if (Partida.turno != jugadorLocal) {
                         Toast.makeText(getApplicationContext(), "No es tu turno.", Toast.LENGTH_LONG).show();
                         return;
@@ -249,7 +246,7 @@ public class Juego extends Activity {
                 int x = id / 100;
                 int y = id % 100;
                 descubrirCasilla(x, y);
-                if (Partida.tipoPartida == "REAL") {
+                if (Partida.tipoPartida.equals("REAL")) {
                     byte[] mensaje;
                     mensaje = new byte[3];
                     mensaje[0] = (byte) 'C';
