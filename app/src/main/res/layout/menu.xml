@@ -45,6 +45,27 @@
         android:text="Partida por turnos" />
 
     <Button
+        android:id="@+id/btnMarcadores"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnMarcadores_Click"
+        android:text="Marcadores" />
+
+    <Button
+        android:id="@+id/btnLogros"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnLogros_Click"
+        android:text="Logros" />
+
+    <Button
+        android:id="@+id/btnGrabarPartida"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="btnGrabarPartida_Click"
+        android:text="Grabar partida" />
+
+    <Button
         android:id="@+id/btnPartidasGuardadas"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

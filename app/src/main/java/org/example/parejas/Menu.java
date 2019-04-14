@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.PlayersClient;
@@ -24,6 +25,7 @@ import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
+import com.google.android.gms.games.stats.PlayerStats;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,6 +48,11 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
     final static int RC_SELECT_PLAYERS = 10000;
     private Button btnInvitar;
     private Button btnPartidaPorTurnos;
+    private Button btnMarcadores;
+    final static int REQUEST_LEADERBOARD = 100;
+    private Button btnLogros;
+    final static int REQUEST_ACHIEVEMENTS = 101;
+    private Button btnGrabarPartida;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,9 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
         btnPartidaEnTiempoReal = (Button) findViewById(R.id.btnPartidaEnTiempoReal);
         btnInvitar = (Button) findViewById(R.id.btnInvitar);
         btnPartidaPorTurnos = (Button) findViewById(R.id.btnPartidaPorTurnos);
+        btnMarcadores = (Button) findViewById(R.id.btnMarcadores);
+        btnLogros = (Button) findViewById(R.id.btnLogros);
+        btnGrabarPartida = (Button) findViewById(R.id.btnGrabarPartida);
     }
 
     public void btnJugar_Click(View v) {
@@ -72,6 +82,7 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
         nuevoJuego(4, 4);
         Intent intent = new Intent(this, Juego.class);
         startActivity(intent);
+        Games.getEventsClient(this, GoogleSignIn.getLastSignedInAccount(this)).increment(getString(R.string.evento_offline), 1);
     }
 
     private void nuevoJuego(int col, int fil) {
@@ -149,6 +160,7 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
                 }
             });
         }
+        estadisticasJugador();
     }
 
     @Override
@@ -229,6 +241,8 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
         nuevoJuego(4, 4);
         Intent intent = new Intent(this, Juego.class);
         startActivity(intent);
+        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this)).increment(getString(R.string.logro_tiempoReal), 1);
+        Games.getEventsClient(this, GoogleSignIn.getLastSignedInAccount(this)).increment(getString(R.string.evento_tiempoReal), 1);
     }
 
 
@@ -255,6 +269,7 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
                         startActivityForResult(intent, RC_SELECT_PLAYERS);
                     }
                 });
+        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this)).unlock(getString(R.string.logro_invitar));
     }
 
     public void btnPartidaPorTurnos_Click(View v) {
@@ -262,7 +277,69 @@ public class Menu extends Activity implements OnInvitationReceivedListener {
         nuevoJuego(4, 4);
         Intent intent = new Intent(this, Juego.class);
         startActivity(intent);
+        Games.getEventsClient(this, GoogleSignIn.getLastSignedInAccount(this)).increment(getString(R.string.evento_porTurnos), 1);
     }
 
+    public void btnMarcadores_Click(View v) {
+        Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this)).getLeaderboardIntent(getString(R.string.marcador_tiempoReal_id)).addOnSuccessListener(new OnSuccessListener<Intent>() {
+            @Override
+            public void onSuccess(Intent intent) {
+                startActivityForResult(intent, REQUEST_LEADERBOARD);
+            }
+        });
+    }
+
+    public void btnLogros_Click(View v) {
+        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this)).getAchievementsIntent().addOnSuccessListener(new OnSuccessListener<Intent>() {
+            @Override
+            public void onSuccess(Intent intent) {
+                startActivityForResult(intent, REQUEST_ACHIEVEMENTS);
+            }
+        });
+    }
+
+    public void estadisticasJugador() {
+        Games.getPlayerStatsClient(this, GoogleSignIn.getLastSignedInAccount(this)).loadPlayerStats(true).addOnCompleteListener(new OnCompleteListener<AnnotatedData<PlayerStats>>() {
+            @Override
+            public void onComplete(Task<AnnotatedData<PlayerStats>> task) {
+                try {
+                    AnnotatedData<PlayerStats> statsData = task.getResult(ApiException.class);
+                    if (statsData.isStale()) {
+                        Toast.makeText(getApplicationContext(), "Usando datos de cache.", Toast.LENGTH_LONG).show();
+                    }
+                    PlayerStats stats = statsData.get();
+                    if (stats != null) {
+                        Toast.makeText(getApplicationContext(), "Estadísticas del jugador cargadas", Toast.LENGTH_LONG).show();
+                        if (stats.getDaysSinceLastPlayed() > 7) {
+                            Toast.makeText(getApplicationContext(), "Ya te hechabamos de menos...", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Bienvenido!!", Toast.LENGTH_LONG).show();
+                        }
+                        if (stats.getNumberOfSessions() > 10) {
+                            Toast.makeText(getApplicationContext(), "Ya eres un jugador experto", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Practica y ejercitarás la mente.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (ApiException apiException) {
+                    int status = apiException.getStatusCode();
+                    Toast.makeText(getApplicationContext(), "Error al recuperar estadísticas.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void showVideoOverlay(View view) {
+        Games.getVideosClient(this, GoogleSignIn.getLastSignedInAccount(this)).getCaptureOverlayIntent().addOnSuccessListener(new OnSuccessListener<Intent>() {
+            @Override
+            public void onSuccess(Intent intent) {
+                startActivityForResult(intent, 777);
+            }
+        });
+    }
+
+    public void btnGrabarPartida_Click(View v) {
+        showVideoOverlay(getWindow().getDecorView().getRootView());
+    }
 
 }

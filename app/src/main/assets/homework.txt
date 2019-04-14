@@ -12,18 +12,18 @@ Google Play Games: Parejas
 (X) Ejercicio: Gestionar los mensajes en una partida a tiempo real.
 (X) Ejercicio: Invitar a otros jugadores.
 (X) Ejercicio: Crear una partida por turnos.
-(_) Ejercicio: Crear un marcador en Google Play Developer Console.
-(_) Ejercicio: Introducir puntuaciones en un marcador.
-(_) Ejercicio: Mostrar un marcador.
-(_) Ejercicio: Crear un logro estándar en Google Play Games.
-(_) Ejercicio: Crear un logro incremental en Google Play Games.
-(_) Ejercicio: Mostrar logros en un juego Android.
-(_) Ejercicio: Desbloquear un logro estándar en un juego Android.
-(_) Ejercicio: Aumentar el contador de un logro incremental.
-(_) Ejercicio: Crear un evento en Google Play Developer Console.
-(_) Ejercicio: Utilizar un evento en un juego Android.
-(_) Ejercicio: Recuperar estadísticas de un jugador.
-(_) Ejercicio: Grabar un video en un juego.
+(X) Ejercicio: Crear un marcador en Google Play Developer Console.
+(X) Ejercicio: Introducir puntuaciones en un marcador.
+(X) Ejercicio: Mostrar un marcador.
+(X) Ejercicio: Crear un logro estándar en Google Play Games.
+(X) Ejercicio: Crear un logro incremental en Google Play Games.
+(X) Ejercicio: Mostrar logros en un juego Android.
+(X) Ejercicio: Desbloquear un logro estándar en un juego Android.
+(X) Ejercicio: Aumentar el contador de un logro incremental.
+(X) Ejercicio: Crear un evento en Google Play Developer Console.
+(X) Ejercicio: Utilizar un evento en un juego Android.
+(X) Ejercicio: Recuperar estadísticas de un jugador.
+(X) Ejercicio: Grabar un video en un juego.
 Extras:
 (_) Práctica: Almacenar puntuación y turno.
 (_) Práctica: Marcador de partidas guardadas:

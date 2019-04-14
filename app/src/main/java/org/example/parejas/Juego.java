@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesCallbackStatusCodes;
+import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.RealTimeMultiplayerClient;
 import com.google.android.gms.games.SnapshotsClient;
 import com.google.android.gms.games.TurnBasedMultiplayerClient;
@@ -84,6 +85,7 @@ public class Juego extends Activity {
     private Turno mTurnData;
     private int turnoPartidaPorTurnos;
     private TurnBasedMultiplayerClient mTurnBasedMultiplayerClient = null;
+    LeaderboardsClient mLeaderboardsClient;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +110,7 @@ public class Juego extends Activity {
                 iniciarPartidaPorTurnos();
                 break;
         }
+        mLeaderboardsClient = Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this));
     }
 
     class actualizaCasillas extends Handler {
@@ -132,6 +135,16 @@ public class Juego extends Activity {
                 }
                 if ((Partida.puntosJ1 + Partida.puntosJ2) == (Partida.FILAS * Partida.COLUMNAS)) {
                     //FIN JUEGO
+                    /*
+                    if (Partida.tipoPartida == "REAL") {
+                        int puntos;
+                        if (jugadorLocal == 1) {
+                            puntos = Partida.puntosJ1;
+                        } else {
+                            puntos = Partida.puntosJ2;
+                        }
+                    }
+                    */
                     if (Partida.tipoPartida.equals("REAL")) {
                         int puntos;
                         if (jugadorLocal == 1) {
@@ -139,6 +152,7 @@ public class Juego extends Activity {
                         } else {
                             puntos = Partida.puntosJ2;
                         }
+                        mLeaderboardsClient.submitScore(getString(R.string.marcador_tiempoReal_id), puntos);
                     }
                     ((TextView) findViewById(R.id.jugador)).setText("GANADOR JUGADOR " + (Partida.turno) + "");
                     if (Partida.tipoPartida.equals("TURNO")) {
@@ -193,7 +207,6 @@ public class Juego extends Activity {
     }
 
 
-
     private void cargarImagenes() {
         imagenes = new ArrayList<Drawable>();
         imagenes.add(getResources().getDrawable(R.drawable.card1));
@@ -219,47 +232,47 @@ public class Juego extends Activity {
         imagenes.add(getResources().getDrawable(R.drawable.card21));
     }
 
-class ButtonListener implements View.OnClickListener {
-    @Override
-    public void onClick(View v) {
-        synchronized (lock) {
-            if (Partida.tipoPartida == "REAL") {
-                if (Partida.turno != jugadorLocal) {
-                    Toast.makeText(getApplicationContext(), "No es tu turno.", Toast.LENGTH_LONG).show();
+    class ButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            synchronized (lock) {
+                if (Partida.tipoPartida == "REAL") {
+                    if (Partida.turno != jugadorLocal) {
+                        Toast.makeText(getApplicationContext(), "No es tu turno.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                if (primeraCasilla != null && segundaCasilla != null) {
                     return;
                 }
-            }
-            if (primeraCasilla != null && segundaCasilla != null) {
-                return;
-            }
-            int id = v.getId();
-            int x = id / 100;
-            int y = id % 100;
-            descubrirCasilla(x, y);
-            if (Partida.tipoPartida == "REAL") {
-                byte[] mensaje;
-                mensaje = new byte[3];
-                mensaje[0] = (byte) 'C';
-                mensaje[1] = (byte) x;
-                mensaje[2] = (byte) y;
-                for (Participant p : mParticipants) {
-                    if (!p.getParticipantId().equals(mMyId)) {
-                        mRealTimeMultiplayerClient.sendReliableMessage(mensaje, mRoomId, p.getParticipantId(), new RealTimeMultiplayerClient.ReliableMessageSentCallback() {
-                            @Override
-                            public void onRealTimeMessageSent(int statusCode, int tokenId, String recipientParticipantId) {
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<Integer>() {
-                            @Override
-                            public void onSuccess(Integer tokenId) {
-                            }
-                        });
+                int id = v.getId();
+                int x = id / 100;
+                int y = id % 100;
+                descubrirCasilla(x, y);
+                if (Partida.tipoPartida == "REAL") {
+                    byte[] mensaje;
+                    mensaje = new byte[3];
+                    mensaje[0] = (byte) 'C';
+                    mensaje[1] = (byte) x;
+                    mensaje[2] = (byte) y;
+                    for (Participant p : mParticipants) {
+                        if (!p.getParticipantId().equals(mMyId)) {
+                            mRealTimeMultiplayerClient.sendReliableMessage(mensaje, mRoomId, p.getParticipantId(), new RealTimeMultiplayerClient.ReliableMessageSentCallback() {
+                                @Override
+                                public void onRealTimeMessageSent(int statusCode, int tokenId, String recipientParticipantId) {
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<Integer>() {
+                                @Override
+                                public void onSuccess(Integer tokenId) {
+                                }
+                            });
+                        }
                     }
                 }
             }
         }
-    }
 
-}
+    }
 
     private void descubrirCasilla(int x, int y) {
         Button button = botones[x][y];
@@ -828,6 +841,5 @@ class ButtonListener implements View.OnClickListener {
             return null;
         }
     }
-
 
 }
