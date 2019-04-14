@@ -388,9 +388,12 @@ public class Juego extends Activity {
     }
 
     void codificaPartidaGuardada() {
-        datosPartidaGuardada = new byte[Partida.FILAS * Partida.COLUMNAS];
+        datosPartidaGuardada = new byte[3+Partida.FILAS * Partida.COLUMNAS];
         int k = 0;
-        for (int i = 0; i < Partida.FILAS; i++) {
+        datosPartidaGuardada[0] = (byte) Partida.turno;
+        datosPartidaGuardada[1] = (byte) Partida.puntosJ1;
+        datosPartidaGuardada[2] = (byte) Partida.puntosJ2;
+        for (int i = 3; i < Partida.FILAS; i++) {
             for (int j = 0; j < Partida.COLUMNAS; j++) {
                 datosPartidaGuardada[k] = (byte) Partida.casillas[i][j];
                 k++;
@@ -401,7 +404,10 @@ public class Juego extends Activity {
     void decodificaPartidaGuardada() {
         int i = 0;
         int j = 0;
-        for (int k = 0; k < Partida.FILAS * Partida.COLUMNAS; k++) {
+        Partida.turno = datosPartidaGuardada[0];
+        Partida.puntosJ1 = datosPartidaGuardada[1];
+        Partida.puntosJ2 = datosPartidaGuardada[2];
+        for (int k = 3; k < Partida.FILAS * Partida.COLUMNAS; k++) {
             Partida.casillas[i][j] = (int) datosPartidaGuardada[k];
             if (j < Partida.COLUMNAS - 1) {
                 j++;
